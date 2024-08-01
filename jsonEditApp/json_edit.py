@@ -6,7 +6,7 @@ import json
 class JSONEditorApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("章节知识点编辑器")
+        self.root.title("专业课章节知识点JSON查看/编辑器")
         self.root.geometry("800x600")
 
         self.json_data = {}

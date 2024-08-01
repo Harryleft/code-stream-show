@@ -3,16 +3,20 @@ import random
 import time
 import tkinter as tk
 from datetime import date
-from tkinter import filedialog, ttk, messagebox, font
+from tkinter import ttk, messagebox
 import json
 from codeStream.knowledge_rain import KnowledgeRain
 from codeStream import config
-from codeStream.log_activity import log_activity
 import tkinter.font as tkfont
+import tkinter.filedialog as filedialog
 
 
 class KnowledgeRainApp:
     def __init__(self, root):
+        """
+        初始化应用程序
+        :param root:
+        """
         self.root = root
         self.root.title("知识代码流：你的专业课陪伴助手")
         self.root.geometry("800x600")
@@ -36,16 +40,30 @@ class KnowledgeRainApp:
         self.check_and_show_instructions()
 
     def setup_fonts(self):
+        """
+        设置应用程序的字体大小
+        :return:
+        """
         self.font_small = self.create_compound_font(10)
         self.font_normal = self.create_compound_font(12)
         self.font_large = self.create_compound_font(14)
         self.font_title = self.create_compound_font(28, weight="bold")
 
     def create_compound_font(self, size, weight="normal"):
+        """
+        设置字体
+        :param size:
+        :param weight:
+        :return:
+        """
         font_tuple = ("Times New Roman", "SimSun")
         return tkfont.Font(family=font_tuple, size=size, weight=weight)
 
     def setup_styles(self):
+        """
+        设置应用程序的样式
+        :return:
+        """
         self.style = ttk.Style()
         self.style.theme_use('clam')
         self.style.configure('TButton', font=self.font_normal, padding=10)
@@ -54,6 +72,10 @@ class KnowledgeRainApp:
         self.style.configure('TLabel', background='#f0f0f0', font=self.font_normal)
 
     def load_quotes(self):
+        """
+        加载JSON名言文件
+        :return:
+        """
         try:
             with open(self.quotes_file, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -69,6 +91,10 @@ class KnowledgeRainApp:
             return []
 
     def get_daily_quote(self):
+        """
+        获取每日名言
+        :return:
+        """
         if not self.quotes:
             return "今天也要加油哦！"
 
@@ -78,29 +104,31 @@ class KnowledgeRainApp:
         return f"{quote['text']} \n\n—— {quote['author']}"
 
     def create_widgets(self):
+        """
+        创建应用程序的所有小部件
+        :return:
+        """
         main_frame = ttk.Frame(self.root, padding="20")
         main_frame.pack(expand=True, fill="both")
 
-        # 每日名言
+        # 组件_每日名言
         quote_label = ttk.Label(main_frame, text=self.daily_quote, font=self.font_large,
                                 wraplength=700, justify="center")
         quote_label.pack(pady=(0, 30))
 
-        # 标题
+        # 组件_标题
         title_label = ttk.Label(main_frame, text="知识点代码流", font=self.font_title)
         title_label.pack(pady=(0, 30))
 
-        # 章节选择框架
+        # 组件_章节选择框架
         chapter_frame = ttk.Frame(main_frame)
         chapter_frame.pack(fill="x", pady=(0, 20))
-
         chapter_label = ttk.Label(chapter_frame, text="选择章节:", font=self.font_normal)
         chapter_label.pack(side="left", padx=(0, 10))
-
         self.chapter_combobox = ttk.Combobox(chapter_frame, font=self.font_normal, state="readonly")
         self.chapter_combobox.pack(side="left", fill="x", expand=True)
 
-        # 全屏模式复选框
+        # 组件_全屏模式复选框
         fullscreen_frame = ttk.Frame(main_frame)
         fullscreen_frame.pack(fill="y", pady=(0, 30))
 
@@ -108,19 +136,23 @@ class KnowledgeRainApp:
                                                 variable=self.fullscreen, style='TCheckbutton')
         self.fullscreen_check.pack(side="left")
 
-        # 展示所有知识点复选框
+        # 组件_展示所有知识点复选框
         self.show_all_var = tk.BooleanVar(value=False)
         show_all_check = ttk.Checkbutton(fullscreen_frame, text="展示所有知识点",
                                          variable=self.show_all_var, style='TCheckbutton')
         show_all_check.pack(side="left")
 
-        # 开始学习按钮（居中）
+        # 按钮区域
         button_frame = ttk.Frame(main_frame)
-        button_frame.pack(fill="x", pady=(0, 30))
+        button_frame.pack(fill="y", pady=(0, 30))
 
-        self.start_button = ttk.Button(button_frame, text="Show", command=self.start_knowledge_rain,
-                                       style='TButton')
-        self.start_button.pack(expand=True, ipadx=20, ipady=10)
+        # 组件_自定义上传JSON文件按钮
+        self.select_file_button = ttk.Button(button_frame, text="选择JSON文件", command=self.select_json_file)
+        self.select_file_button.pack(side=tk.LEFT, padx=5)
+
+        # 组件_开始按钮
+        self.start_button = ttk.Button(button_frame, text="开始", command=self.start_knowledge_rain)
+        self.start_button.pack(side=tk.LEFT, padx=5)
 
         # 页脚
         footer_frame = ttk.Frame(self.root)
@@ -128,7 +160,48 @@ class KnowledgeRainApp:
         footer_label = ttk.Label(footer_frame, text="© 2024 是希望", font=self.font_normal)
         footer_label.pack(pady=10)
 
+    def select_json_file(self):
+        """
+        用户自定义选择JSON文件
+        :return:
+        """
+        file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
+        if file_path:
+            try:
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    data = json.load(file)
+                    if self.validate_json_structure(data):
+                        self.chapters = data
+                        self.chapter_combobox['values'] = list(data.keys())
+                        if self.chapter_combobox['values']:
+                            self.chapter_combobox.set(self.chapter_combobox['values'][0])
+                        messagebox.showinfo("成功", "JSON文件加载成功")
+                    else:
+                        raise ValueError("JSON文件格式不正确, 请确保格式正确, 例如: {'章节1': {'知识点1': '详情1'}}")
+            except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
+                messagebox.showerror("错误", f"{str(e)}")
+
+    def validate_json_structure(self, data):
+        """
+        验证用户上传的JSON文件结构是否正确
+        :param data:
+        :return:
+        """
+        if not isinstance(data, dict):
+            return False
+        for chapter, knowledge_points in data.items():
+            if not isinstance(knowledge_points, dict):
+                return False
+            for point, detail in knowledge_points.items():
+                if not isinstance(point, str) or not isinstance(detail, str):
+                    return False
+        return True
+
     def load_chapters(self):
+        """
+        加载章节
+        :return:
+        """
         try:
             with open(self.json_file, 'r', encoding='utf-8') as file:
                 data = json.load(file)
@@ -144,6 +217,10 @@ class KnowledgeRainApp:
             messagebox.showerror("错误", f"加载章节时发生错误: {str(e)}")
 
     def start_knowledge_rain(self):
+        """
+        启动知识雨
+        :return:
+        """
         selected_chapter = self.chapter_combobox.get()
         if not selected_chapter:
             messagebox.showwarning("警告", "请选择一个章节")
@@ -178,6 +255,10 @@ class KnowledgeRainApp:
             self.root.deiconify()
 
     def check_and_show_instructions(self):
+        """
+        检查是否需要显示应用程序的使用说明, 如果用户点击了"不再显示"，则以后不再显示
+        :return:
+        """
         if not os.path.exists(self.config_file):
             self.show_instructions()
         else:
@@ -188,6 +269,10 @@ class KnowledgeRainApp:
             self.show_instructions()
 
     def show_instructions(self):
+        """
+        显示应用程序的使用说明
+        :return:
+        """
         instructions = (
             "欢迎使用知识代码流！\n\n"
             "这是一个帮助你学习和复习知识的工具。\n"
@@ -229,6 +314,10 @@ class KnowledgeRainApp:
         close_button.pack(pady=10)
 
     def show_all_knowledge(self):
+        """
+        展现JSON文件中的所有知识点
+        :return:
+        """
         all_knowledge = {}
         for chapter, knowledge_points in self.chapters.items():
             all_knowledge.update(knowledge_points)
@@ -239,7 +328,7 @@ class KnowledgeRainApp:
         self.root.withdraw()
 
         try:
-            rain = KnowledgeRain(screen_width, screen_height, all_knowledge, fullscreen=self.fullscreen.get())
+            rain = KnowledgeRain(screen_width, screen_height, all_knowledge)
             rain.run()
         except Exception as e:
             messagebox.showerror("错误", f"启动知识雨时发生错误: {str(e)}")
@@ -251,7 +340,7 @@ def main():
     try:
         root = tk.Tk()
         root.configure(bg="#f0f0f0")
-        app = KnowledgeRainApp(root)
+        KnowledgeRainApp(root)
         root.mainloop()
     except Exception as e:
         messagebox.showerror("错误", f"应用程序运行时发生错误: {str(e)}")
