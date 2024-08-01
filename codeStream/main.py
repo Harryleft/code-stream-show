@@ -337,6 +337,10 @@ class KnowledgeRainApp:
 
 
 def main():
+    """
+    主函数
+    :return:
+    """
     try:
         root = tk.Tk()
         root.configure(bg="#f0f0f0")
@@ -347,4 +351,7 @@ def main():
 
 
 if __name__ == "__main__":
+    """
+    程序入口
+    """
     main()
