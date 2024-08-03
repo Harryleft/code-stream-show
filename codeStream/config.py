@@ -21,4 +21,7 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 
-file_path = 'json_file/667_knowledge_points.json'
+KNOWLEDGE_FILE_PATH = 'json_file/667_knowledge_points.json'
+INSTRUCTION_FILE_PATH = 'json_file/instruction_config.json'
+QUOTES_FILE_PATH = 'json_file/quotes.json'
+
