@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/codeStream" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/codestream.spec" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/jsonEditApp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/codeStream" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/codestream.spec" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jsonEditApp" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
