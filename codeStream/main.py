@@ -12,10 +12,29 @@ from codeStream.style_manager import StyleManager
 
 
 class KnowledgeRainApp:
+    """
+    The main application class for the Knowledge Rain App.
+
+    Attributes:
+        root (tk.Tk): The root window of the application.
+        json_file (str): Path to the knowledge points JSON file.
+        quotes_file (str): Path to the quotes JSON file.
+        fullscreen (tk.BooleanVar): Boolean variable to track fullscreen mode.
+        chapters (dict): Dictionary to store chapters and their knowledge points.
+        start_time (float): The start time of the application.
+        style_manager (StyleManager): Instance of StyleManager to manage styles.
+        quotes_manager (QuotesManager): Instance of QuotesManager to manage quotes.
+        daily_quote (str): The daily quote.
+        json_file_manager (JsonFileManager): Instance of JsonFileManager to manage JSON files.
+        instructions_manager (InstructionsManager): Instance of InstructionsManager to manage instructions.
+    """
+
     def __init__(self, root):
         """
-        初始化应用程序
-        :param root:
+        Initialize the KnowledgeRainApp instance.
+
+        Args:
+            root (tk.Tk): The root window of the application.
         """
         self.root = root
         self.root.title("知识代码流：你的专业课陪伴助手")
@@ -44,22 +63,21 @@ class KnowledgeRainApp:
 
     def create_widgets(self):
         """
-        创建应用程序的所有小部件
-        :return:
+        Create all widgets for the application.
         """
         main_frame = ttk.Frame(self.root, padding="20")
         main_frame.pack(expand=True, fill="both")
 
-        # 组件_每日名言
+        # Component: Daily Quote
         quote_label = ttk.Label(main_frame, text=self.daily_quote, font=self.style_manager.font_large,
                                 wraplength=700, justify="center")
         quote_label.pack(pady=(0, 30))
 
-        # 组件_标题
+        # Component: Title
         title_label = ttk.Label(main_frame, text="知识点代码流", font=self.style_manager.font_title)
         title_label.pack(pady=(0, 30))
 
-        # 组件_章节选择框架
+        # Component: Chapter Selection Frame
         chapter_frame = ttk.Frame(main_frame)
         chapter_frame.pack(fill="x", pady=(0, 20))
         chapter_label = ttk.Label(chapter_frame, text="选择章节:", font=self.style_manager.font_normal)
@@ -67,7 +85,7 @@ class KnowledgeRainApp:
         self.chapter_combobox = ttk.Combobox(chapter_frame, font=self.style_manager.font_normal, state="readonly")
         self.chapter_combobox.pack(side="left", fill="x", expand=True)
 
-        # 组件_全屏模式复选框
+        # Component: Fullscreen Mode Checkbox
         fullscreen_frame = ttk.Frame(main_frame)
         fullscreen_frame.pack(fill="y", pady=(0, 30))
 
@@ -75,25 +93,25 @@ class KnowledgeRainApp:
                                                 variable=self.fullscreen, style='TCheckbutton')
         self.fullscreen_check.pack(side="left")
 
-        # 组件_展示所有知识点复选框
+        # Component: Show All Knowledge Points Checkbox
         self.show_all_var = tk.BooleanVar(value=False)
         show_all_check = ttk.Checkbutton(fullscreen_frame, text="展示所有知识点",
                                          variable=self.show_all_var, style='TCheckbutton')
         show_all_check.pack(side="left")
 
-        # 按钮区域
+        # Button Area
         button_frame = ttk.Frame(main_frame)
         button_frame.pack(fill="y", pady=(0, 30))
 
-        # 组件_自定义上传JSON文件按钮
+        # Component: Custom Upload JSON File Button
         self.select_file_button = ttk.Button(button_frame, text="选择JSON文件", command=self.json_file_manager.select_json_file)
         self.select_file_button.pack(side=tk.LEFT, padx=5)
 
-        # 组件_开始按钮
+        # Component: Start Button
         self.start_button = ttk.Button(button_frame, text="开始", command=self.start_knowledge_rain)
         self.start_button.pack(side=tk.LEFT, padx=5)
 
-        # 页脚
+        # Footer
         footer_frame = ttk.Frame(self.root)
         footer_frame.pack(side="bottom", fill="x")
         footer_label = ttk.Label(footer_frame, text="© 2024 是希望", font=self.style_manager.font_normal)
@@ -101,8 +119,7 @@ class KnowledgeRainApp:
 
     def load_chapters(self):
         """
-        加载章节
-        :return:
+        Load chapters from the JSON file.
         """
         try:
             with open(self.json_file, 'r', encoding='utf-8') as file:
@@ -120,8 +137,7 @@ class KnowledgeRainApp:
 
     def start_knowledge_rain(self):
         """
-        启动知识雨
-        :return:
+        Start the knowledge rain animation.
         """
         selected_chapter = self.chapter_combobox.get()
         if not selected_chapter:
@@ -158,8 +174,7 @@ class KnowledgeRainApp:
 
     def show_all_knowledge(self):
         """
-        展现JSON文件中的所有知识点
-        :return:
+        Display all knowledge points from the JSON file.
         """
         all_knowledge = {}
         for chapter, knowledge_points in self.chapters.items():
@@ -181,8 +196,7 @@ class KnowledgeRainApp:
 
 if __name__ == "__main__":
     """
-    主函数
-    :return:
+    Main function to run the application.
     """
     try:
         root = tk.Tk()

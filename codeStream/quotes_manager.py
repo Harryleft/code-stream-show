@@ -5,38 +5,56 @@ from tkinter import messagebox
 
 
 class QuotesManager:
+    """
+    A class to manage quotes, providing functionality to load quotes and get the daily quote.
+
+    Attributes:
+        quotes_file (str): The path to the quotes file.
+        quotes (list): The list of quotes.
+    """
+
     def __init__(self, quotes_file):
+        """
+        Initialize the QuotesManager instance.
+
+        Args:
+            quotes_file (str): The path to the quotes file.
+        """
         self.quotes_file = quotes_file
         self.quotes = self.load_quotes()
 
     def load_quotes(self):
         """
-        加载JSON名言文件
-        :return:
+        Load the JSON quotes file.
+
+        Returns:
+            list: The list of quotes, or an empty list if loading fails.
         """
         try:
             with open(self.quotes_file, 'r', encoding='utf-8') as file:
                 data = json.load(file)
                 return data.get('quotes', [])
         except FileNotFoundError:
-            messagebox.showwarning("警告", f"未找到名言文件: {self.quotes_file}")
+            messagebox.showwarning("Warning", f"Quotes file not found: {self.quotes_file}")
             return []
         except json.JSONDecodeError:
-            messagebox.showerror("错误", "名言文件格式错误")
+            messagebox.showerror("Error", "Quotes file format error")
             return []
         except Exception as e:
-            messagebox.showerror("错误", f"加载名言时发生错误: {str(e)}")
+            messagebox.showerror("Error", f"An error occurred while loading quotes: {str(e)}")
             return []
 
     def get_daily_quote(self):
         """
-        获取每日名言
-        :return:
+        Get the daily quote.
+
+        Returns:
+            str: The daily quote, or a default message if the quotes list is empty.
         """
         if not self.quotes:
-            return "今天也要加油哦！"
+            return "Keep going today!"
 
-        # 使用日期作为随机种子，确保每天显示相同的名言
+        # Use the date as a random seed to ensure the same quote is shown each day
         random.seed(date.today().toordinal())
         quote = random.choice(self.quotes)
         return f"{quote['text']} \n\n—— {quote['author']}"
