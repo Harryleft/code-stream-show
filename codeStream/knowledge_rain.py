@@ -20,7 +20,8 @@ class KnowledgeRain:
         Args:
             width (int): The width of the game window.
             height (int): The height of the game window.
-            knowledge_points (dict): A dictionary of knowledge points and their explanations.
+            knowledge_points (dict): A dictionary of knowledge points and
+                                     their explanations.
             fullscreen (bool): Whether to run the game in fullscreen mode.
         """
         pygame.init()
@@ -28,7 +29,9 @@ class KnowledgeRain:
         self.height = height
         self.fullscreen = fullscreen
         if self.fullscreen:
-            self.screen = pygame.display.set_mode((self.width, self.height), pygame.FULLSCREEN)
+            self.screen = pygame.display.set_mode(
+                (self.width, self.height), pygame.FULLSCREEN
+            )
         else:
             self.screen = pygame.display.set_mode((self.width, self.height))
         pygame.display.set_caption("考研知识代码流，你的无聊陪伴助手")
@@ -39,10 +42,16 @@ class KnowledgeRain:
         self.WHITE = config.WHITE
 
         # Set up fonts
-        self.font = pygame.freetype.SysFont('simsun', config.FONT_SIZE) \
-            if 'simsun' in pygame.freetype.get_fonts() else pygame.freetype.Font(None, config.FONT_SIZE)
-        self.large_font = pygame.freetype.SysFont('simsun', config.LARGE_FONT_SIZE) \
-            if 'simsun' in pygame.freetype.get_fonts() else pygame.freetype.Font(None, config.LARGE_FONT_SIZE)
+        self.font = (
+            pygame.freetype.SysFont("simsun", config.FONT_SIZE)
+            if "simsun" in pygame.freetype.get_fonts()
+            else pygame.freetype.Font(None, config.FONT_SIZE)
+        )
+        self.large_font = (
+            pygame.freetype.SysFont("simsun", config.LARGE_FONT_SIZE)
+            if "simsun" in pygame.freetype.get_fonts()
+            else pygame.freetype.Font(None, config.LARGE_FONT_SIZE)
+        )
 
         self.clock = pygame.time.Clock()
 
@@ -56,7 +65,9 @@ class KnowledgeRain:
         self.grid_size = config.FONT_SIZE * 2
         self.grid_width = self.width // self.grid_size
         self.grid_height = self.height // self.grid_size
-        self.grid = [[False for _ in range(self.grid_height)] for _ in range(self.grid_width)]
+        self.grid = [
+            [False for _ in range(self.grid_height)] for _ in range(self.grid_width)
+        ]
 
         # Set up knowledge points
         self.knowledge_points = knowledge_points
@@ -90,7 +101,8 @@ class KnowledgeRain:
             if knowledge not in self.active_knowledge:
                 return knowledge
             if self.knowledge_index == start_index:
-                return None  # If all knowledge points are on screen, return None
+                # If all knowledge points are on screen, return None
+                return None
 
     def find_empty_cell(self, text_width):
         """
@@ -100,7 +112,8 @@ class KnowledgeRain:
             text_width (int): The width of the text to be placed.
 
         Returns:
-            tuple: (x, y, cells) coordinates and number of cells needed, or None if no space found.
+            tuple: (x, y, cells) coordinates and number of cells needed,
+            or None if no space found.
         """
         cells_needed = (text_width + self.grid_size - 1) // self.grid_size
         start_x = random.randint(0, self.grid_width - cells_needed)
@@ -140,8 +153,8 @@ class KnowledgeRain:
         """
         Create a new raindrop with a knowledge point.
 
-        Returns:
-            list: A new raindrop [x, y, speed, knowledge, grid_x, grid_y, cells], or None if unable to create.
+        Returns: list: A new raindrop [x, y, speed, knowledge, grid_x,
+        grid_y, cells], or None if unable to create.
         """
         knowledge = self.get_next_knowledge()
         if knowledge is None:
@@ -164,7 +177,8 @@ class KnowledgeRain:
 
     def update_raindrops(self):
         """
-        Update the positions of all raindrops and remove those that are off-screen.
+        Update the positions of all raindrops and remove those that are
+        off-screen.
         """
         if not self.paused:
             raindrops_to_remove = []
@@ -176,8 +190,13 @@ class KnowledgeRain:
                 if new_grid_y != old_grid_y:
                     if new_grid_y >= self.grid_height:
                         # If raindrop goes off the screen, mark it for removal
-                        for i in range(drop[6]):  # drop[6] stores the number of cells occupied by this raindrop
-                            self.grid[drop[4] + i][old_grid_y] = False  # Clear old position
+                        for i in range(
+                            drop[6]
+                        ):  # drop[6] stores the number of cells occupied by
+                            # this raindrop
+                            self.grid[drop[4] + i][
+                                old_grid_y
+                            ] = False  # Clear old position
                         self.active_knowledge.discard(drop[3])
                         raindrops_to_remove.append(drop)
                     else:
@@ -209,7 +228,9 @@ class KnowledgeRain:
         Args:
             change (int): The amount to change the density by.
         """
-        self.density = max(config.DENSITY_MIN, min(config.DENSITY_MAX, self.density + change))
+        self.density = max(
+            config.DENSITY_MIN, min(config.DENSITY_MAX, self.density + change)
+        )
         print(f"当前密度：{self.density}")
 
     def show_detail(self, knowledge):
@@ -230,9 +251,9 @@ class KnowledgeRain:
         max_width = self.width - config.TEXT_MAX_WIDTH_OFFSET
 
         lines = []
-        if '\n' in explanation:
+        if "\n" in explanation:
             # If newlines exist, split by newline
-            paragraphs = explanation.split('\n')
+            paragraphs = explanation.split("\n")
             for paragraph in paragraphs:
                 words = paragraph.split()
                 current_line = ""
@@ -273,8 +294,13 @@ class KnowledgeRain:
                 detail_surface.blit(text, (config.TEXT_X_OFFSET, y))
                 y += line_height
             exit_text, _ = self.font.render("点击任意位置返回", self.GREEN)
-            detail_surface.blit(exit_text,
-                                (self.width - config.TEXT_EXIT_X_OFFSET, self.height - config.TEXT_EXIT_Y_OFFSET))
+            detail_surface.blit(
+                exit_text,
+                (
+                    self.width - config.TEXT_EXIT_X_OFFSET,
+                    self.height - config.TEXT_EXIT_Y_OFFSET,
+                ),
+            )
             self.screen.blit(detail_surface, (0, 0))
             pygame.display.flip()
 

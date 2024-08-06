@@ -61,10 +61,10 @@ GREEN = (0, 255, 0)
 WHITE = (255, 255, 255)
 
 # File path for the knowledge points JSON file.
-KNOWLEDGE_FILE_PATH = 'json_file/667_knowledge_points.json'
+KNOWLEDGE_FILE_PATH = "json_file/667_knowledge_points.json"
 
 # File path for the instruction configuration JSON file.
-INSTRUCTION_FILE_PATH = 'json_file/instruction_config.json'
+INSTRUCTION_FILE_PATH = "json_file/instruction_config.json"
 
 # File path for the quotes JSON file.
-QUOTES_FILE_PATH = 'json_file/quotes.json'
+QUOTES_FILE_PATH = "json_file/quotes.json"

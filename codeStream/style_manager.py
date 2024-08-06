@@ -7,12 +7,18 @@ class StyleManager:
     Manages the styles and fonts for the application.
 
     Attributes:
-        root (tkinter.Tk): The root window of the application.
-        font_small (tkinter.font.Font): The small font used in the application.
-        font_normal (tkinter.font.Font): The normal font used in the application.
-        font_large (tkinter.font.Font): The large font used in the application.
-        font_title (tkinter.font.Font): The title font used in the application.
-        style (ttk.Style): The style configuration for the application.
+        root (tkinter.Tk):
+                The root window of the application.
+        font_small (tkinter.font.Font):
+                The small font used in the application.
+        font_normal (tkinter.font.Font):
+                The normal font used in the application.
+        font_large (tkinter.font.Font):
+                The large font used in the application.
+        font_title (tkinter.font.Font):
+                The title font used in the application.
+        style (ttk.Style):
+                The style configuration for the application.
     """
 
     def __init__(self, root):
@@ -54,8 +60,10 @@ class StyleManager:
         Sets up the styles for the application.
         """
         self.style = ttk.Style()
-        self.style.theme_use('clam')
-        self.style.configure('TButton', font=self.font_normal, padding=10)
-        self.style.configure('TCheckbutton', font=self.font_normal, background='#f0f0f0')
-        self.style.configure('TFrame', background='#f0f0f0')
-        self.style.configure('TLabel', background='#f0f0f0', font=self.font_normal)
+        self.style.theme_use("clam")
+        self.style.configure("TButton", font=self.font_normal, padding=10)
+        self.style.configure(
+            "TCheckbutton", font=self.font_normal, background="#f0f0f0"
+        )
+        self.style.configure("TFrame", background="#f0f0f0")
+        self.style.configure("TLabel", background="#f0f0f0", font=self.font_normal)

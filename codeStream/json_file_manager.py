@@ -3,7 +3,8 @@ from tkinter import filedialog, messagebox
 
 
 class JsonFileManager:
-    """A class to manage JSON file operations, including selecting and validating JSON files."""
+    """A class to manage JSON file operations, including selecting and
+    validating JSON files."""
 
     def __init__(self, root):
         """
@@ -26,15 +27,19 @@ class JsonFileManager:
         if file_path:
             try:
                 # Read and load the JSON file
-                with open(file_path, 'r', encoding='utf-8') as file:
+                with open(file_path, "r", encoding="utf-8") as file:
                     data = json.load(file)
                     # Validate the JSON structure
                     if self.validate_json_structure(data):
                         return data
                     else:
-                        raise ValueError("JSON文件格式不正确, 请确保格式正确, 例如: {'章节1': {'知识点1': '详情1'}}")
+                        raise ValueError(
+                            "JSON文件格式不正确, 请确保格式正确, 例如: {'章节1': {'知识点1': "
+                            "'详情1'}}"
+                        )
             except (FileNotFoundError, json.JSONDecodeError, ValueError) as e:
-                # Show an error message if the file is not found or JSON is invalid
+                # Show an error message if the file is not found or JSON is
+                # invalid
                 messagebox.showerror("错误", f"{str(e)}")
         return None
 
